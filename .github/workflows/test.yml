@@ -1,8 +1,9 @@
 name: Test
 
 on:
-  types: [ opened, synchronize ] #Runs on PR creation/updation
-  branches: [ main ]
+  pull_request_target:
+    types: [ opened, synchronize ] #Runs on PR creation/updation
+    branches: [ main ]
         
 jobs: 
   version:
