@@ -1,0 +1,24 @@
+name: Test
+
+on:
+  types: [ opened, synchronize ] #Runs on PR creation/updation
+  branches: [ main ]
+        
+jobs: 
+  version:
+    name: Check mergeability and increment version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+
+      # Make sure that PR has latest changes from main before incrementing version and tagging PR
+      - name: main branch has no changes since last synced to PR branch
+        run: |
+          if ! git merge-base --is-ancestor origin/main ${{ github.event.pull_request.head.sha }};
+          then echo "This branch is not up to date with main";
+          exit 1; fi
