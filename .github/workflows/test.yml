@@ -45,6 +45,7 @@ jobs:
           
           # Now run the actual version bump
           npm version patch
+          git push && git push --tags
 
           
 
