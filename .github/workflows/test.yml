@@ -23,6 +23,7 @@ jobs:
 
       - name: Bump version
         run: |
+          npm version patch
           git push && git push --tags
 
           
