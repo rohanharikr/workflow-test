@@ -23,26 +23,7 @@ jobs:
 
       - name: Bump version
         run: |
-          # Get current version before bumping
-          CURRENT_VERSION=$(node -p "require('./package.json').version")
-          echo "Current version: $CURRENT_VERSION"
-          
-          # Calculate what the new version will be
-          NEW_VERSION=$(npm version patch --dry-run | sed 's/v//')
-          echo "New version will be: $NEW_VERSION"
-          
-          # Delete tag if it already exists
-          if git rev-parse "v$NEW_VERSION" >/dev/null 2>&1; then
-            echo "Tag v$NEW_VERSION already exists. Deleting it."
-            git tag -d "v$NEW_VERSION"
-          fi
-          
-          # Now run the actual version bump
           npm version patch
-          VERSION=$(node -p "require('./package.json').version")
-          echo "VERSION=$VERSION"
-          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
-          git push && git push --tags
 
           
 
