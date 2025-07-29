@@ -23,6 +23,27 @@ jobs:
 
       - name: Bump version
         run: |
+          # Get current version before bumping
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "Current version: $CURRENT_VERSION"
+          
+          # Calculate what the new version will be (manual increment)
+          MAJOR=$(echo $CURRENT_VERSION | cut -d '.' -f 1)
+          MINOR=$(echo $CURRENT_VERSION | cut -d '.' -f 2)
+          PATCH=$(echo $CURRENT_VERSION | cut -d '.' -f 3)
+          NEW_PATCH=$((PATCH + 1))
+          NEW_VERSION="$MAJOR.$MINOR.$NEW_PATCH"
+          echo "New version will be: $NEW_VERSION"
+          
+          # Check if the new version tag already exists and delete it
+          if git rev-parse "v$NEW_VERSION" >/dev/null 2>&1; then
+            echo "Tag v$NEW_VERSION already exists. Deleting it."
+            git tag -d "v$NEW_VERSION"
+          else
+            echo "Tag v$NEW_VERSION does not exist. Proceeding."
+          fi
+          
+          # Now run the actual version bump
           npm version patch
 
           
