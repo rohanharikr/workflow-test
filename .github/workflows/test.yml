@@ -24,6 +24,13 @@ jobs:
       - name: Bump version
         run: |
           npm version patch
+          VERSION=$(node -p "require('./package.json').version")
+          echo "VERSION=$VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+            echo "Tag v$VERSION already exists. Deleting it."
+            git tag -d "v$VERSION"
+          fi
           git push && git push --tags
 
           
